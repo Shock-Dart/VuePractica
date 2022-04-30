@@ -18,13 +18,13 @@
                     username: "",
                     posts:[{
                         title: "Titulo Ejemplo",
-                        descripcion: "Hola mundardo"
+                        descripcion: "Hola mundardo 1"
                     },{
                         title: "Titulo Ejemplo2",
-                        descripcion: "Hola mundardo2"
+                        descripcion: "Hola mundardo 2"
                     },{
                         title: "Titulo Ejemplo3",
-                        descripcion: "Hola mundardo3"
+                        descripcion: "Hola mundardo 3"
                     }]
                 };
             },
@@ -52,9 +52,9 @@
                 <div v-if="estado">
                     <p> Hola, {{ username }} </p>
                     <div class="list">
-                        <div v-for="(item, i) in posts" :key"i" class="item">
+                        <div v-for="(item, i) in posts" :key="i" class="item">
                             <div class="titulo"> {{item.title}} </div>
-                            <p>C{{item.descripcion}}</p>
+                            <p>{{item.descripcion}}</p>
                         </div>
                     </div>
                 </div>
