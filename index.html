@@ -10,21 +10,21 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.2.30/vue.global.min.js"></script>
     <div id="app"></div>
     <script>
-        const vm = Vue.createApp({
+        const app = Vue.createApp({
             data(){
                 return{
                     text: "Accede a tu cuenta",
                     estado: false,
-                    username: "",
+                    username: "Usuario Prueba",
                     posts:[{
                         title: "Titulo Ejemplo",
-                        descripcion: "Hola mundardo"
+                        descripcion: "Hola mundardo 1"
                     },{
                         title: "Titulo Ejemplo2",
-                        descripcion: "Hola mundardo2"
+                        descripcion: "Hola mundardo 2"
                     },{
                         title: "Titulo Ejemplo3",
-                        descripcion: "Hola mundardo3"
+                        descripcion: "Hola mundardo 3"
                     }]
                 };
             },
@@ -36,6 +36,9 @@
                         this.text = "Accede a tu cuenta"
                         this.username = ""
                     }
+                },
+                username(value){
+                    console.log(value)
                 }
             },
             computed:{
@@ -48,27 +51,80 @@
             },
             template: `
             <div class="container" :class="styles">
-                <h2> {{ text }} </h2> 
-                <div v-if="estado">
-                    <p> Hola, {{ username }} </p>
+                <Header :titular = text /> 
+                <Padre :value1 = username  :anuncios = posts :bandera = estado />
+                <button @click="estado = !estado" > 
+                    <boton :flag=estado />
+                </button>
+            </div>
+            `
+        })
+
+        app.component("Padre", {
+            props: {
+                value1:String,
+                anuncios:Array,
+                bandera:Boolean
+            },
+            template: `
+                <div v-if="bandera">
+                    <p> Hola, {{ value1 }} </p>
                     <div class="list">
-                        <div v-for="(item, i) in posts" :key"i" class="item">
-                            <div class="titulo"> {{item.title}} </div>
-                            <p>C{{item.descripcion}}</p>
-                        </div>
+                        <item 
+                            v-for="(item, i) in anuncios" 
+                            :key="i"
+                            :publicaciones="item"
+                        />
                     </div>
                 </div>
                 <div v-else>
                     <div> Username </div>
-                    <input type="text" v-model="username">
+                    <Hijo v-model="value1" />
                 </div>
-                <button @click="estado = !estado" > 
-                    <div v-if="!estado"> Acceder </div>
-                    <div v-else> Salir </div> 
-                </button>
+            `
+        })
+
+        app.component("Hijo", {
+            props: ['modelValue'],
+            emits: ['update:modelValue'],
+            template: `
+                <input
+                    :value="modelValue"
+                    @input="$emit('update:modelValue', $event.target.value)"
+                />
+            `
+        })
+
+        app.component("Header", {
+            props: {
+                titular:String
+            },
+            template: `
+            <h2> {{ titular }} </h2> 
+            `
+        })
+
+        app.component("item", {
+            props: ["publicaciones"],
+            template: `
+            <div class="item">
+                <div class="titulo"> {{publicaciones.title}} </div>
+                <p>{{publicaciones.descripcion}}</p>
             </div>
             `
-        }).mount("#app");
+        })
+
+        app.component("boton", {
+            props: {
+                flag:Boolean
+            },
+            template: `
+            <div v-if="!flag"> Acceder </div>
+            <div v-else> Salir </div> 
+            `
+        })
+        
+        const vm = app.mount("#app");
 
         console.log(vm);
     </script>
