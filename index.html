@@ -11,161 +11,29 @@
     <div id="app"></div>
     <script>
         const app = Vue.createApp({
-            data(){
-                return{
-                    text: "Accede a tu cuenta",
-                    estado: false,
-                    username: "Usuario Prueba",
-                    posts:[{
-                        title: "Titulo Ejemplo",
-                        descripcion: "Hola mundardo 1"
-                    },{
-                        title: "Titulo Ejemplo2",
-                        descripcion: "Hola mundardo 2"
-                    },{
-                        title: "Titulo Ejemplo3",
-                        descripcion: "Hola mundardo 3"
-                    }]
-                };
-            },
-            watch: {
-                estado(value){
-                    if(value){
-                        this.text = "Iniciar Sesion"
-                    } else {
-                        this.text = "Accede a tu cuenta"
-                        this.username = ""
-                    }
-                },
-                username(value){
-                    console.log(value)
-                }
-            },
-            computed:{
-                label(){
-                    return this.estado ? "Cerrar" : "Abrir"
-                },
-                styles(){
-                    return this.estado? ['open'] : ['closed']
-                }
-            },
             template: `
-            <div class="container" :class="styles">
-                <Header :titular = text /> 
-                <Padre :value1 = username  :anuncios = posts :bandera = estado />
-                <button @click="estado = !estado" > 
-                    <boton :flag=estado />
-                </button>
-            </div>
-            `
-        })
-
-        app.component("Padre", {
-            props: {
-                value1:String,
-                anuncios:Array,
-                bandera:Boolean
-            },
-            template: `
-                <div v-if="bandera">
-                    <p> Hola, {{ value1 }} </p>
-                    <div class="list">
-                        <item 
-                            v-for="(item, i) in anuncios" 
-                            :key="i"
-                            :publicaciones="item"
-                        />
-                    </div>
+                <div>
+                    <v-layout>
+                        <template v-slot:header>
+                            Titulo
+                        </template>
+                        <template v-slot:content>
+                            Chinrlamientras
+                        </template>
+                    </v-layout>
                 </div>
-                <div v-else>
-                    <div> Username </div>
-                    <Hijo v-model="value1" />
-                </div>
-            `
-        })
-
-        app.component("Hijo", {
-            props: ['modelValue'],
-            emits: ['update:modelValue'],
-            template: `
-                <input
-                    :value="modelValue"
-                    @input="$emit('update:modelValue', $event.target.value)"
-                />
-            `
-        })
-
-        app.component("Header", {
-            props: {
-                titular:String
-            },
-            template: `
-            <h2> {{ titular }} </h2> 
-            `
-        })
-
-        app.component("item", {
-            props: ["publicaciones"],
-            template: `
-            <div class="item">
-                <div class="titulo"> {{publicaciones.title}} </div>
-                <p>{{publicaciones.descripcion}}</p>
-            </div>
-            `
-        })
-
-        app.component("boton", {
-            props: {
-                flag:Boolean
-            },
-            template: `
-            <div v-if="!flag"> Acceder </div>
-            <div v-else> Salir </div> 
             `
         })
         
-        const vm = app.mount("#app");
+        app.component("v-layout", {
+            template:`
+                <header>
+                    <slot name="header"></slot>
+                </header>
+                <div><slot name="content"></slot></div> `
+        })
 
-        console.log(vm);
+        const vm = app.mount("#app");
     </script>
-    <style>
-        html, body {
-            height: 100vh;
-            margin: 0;
-            font-family: Arial, Helvetica, sans-serif;
-        }
-        #app, .container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            width: 100%;
-            height: 100%;
-        }
-        button {
-            margin-top: 24px;
-            border: none;
-            background-color: white;
-            padding: 8px 24px;
-            border-radius: 12px;
-        }
-        .closed {
-            background-color: #eca1a6;
-        }
-        .open {
-            background-color: #b5e7a0;
-        }
-        .list{
-            display: flex;
-            flex-direction: column;
-        }
-        .item{
-            border: 2px solid #000000;
-        }
-        .titulo{
-            font-weight: 200;
-            font-size: large;
-        }
-    </style>
 </body>
 </html>
